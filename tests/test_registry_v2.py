@@ -1,4 +1,5 @@
 import json
+import re
 import sys
 import tempfile
 import unittest
@@ -13,6 +14,25 @@ from common import parse_skill  # noqa: E402
 
 
 class RegistryV2Test(unittest.TestCase):
+    def test_active_skills_support_linux_release_candidate(self):
+        for skill_md in sorted((ROOT / "skills").glob("*/SKILL.md")):
+            metadata, _ = parse_skill(skill_md)
+            if metadata.get("status", "active") == "active":
+                with self.subTest(skill=metadata["name"]):
+                    self.assertEqual(
+                        "1.0.0-rc.1", metadata["min_lightagent_version"]
+                    )
+
+    def test_workflow_actions_are_pinned_to_commits(self):
+        workflows = "\n".join(
+            path.read_text(encoding="utf-8")
+            for path in sorted((ROOT / ".github" / "workflows").glob("*.yml"))
+        )
+        references = re.findall(r"^\s*-?\s*uses:\s*[^@\s]+@([^\s#]+)", workflows, re.MULTILINE)
+
+        self.assertTrue(references)
+        self.assertTrue(all(re.fullmatch(r"[0-9a-f]{40}", item) for item in references))
+
     def test_v2_script_skill_declares_runner_entrypoint(self):
         metadata, text = parse_skill(ROOT / "skills" / "av-meta" / "SKILL.md")
         self.assertEqual(2, metadata["schema_version"])

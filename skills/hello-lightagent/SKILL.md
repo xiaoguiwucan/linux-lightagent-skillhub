@@ -7,7 +7,7 @@ author: LightAgent
 license: Apache-2.0
 homepage: https://github.com/xiaoguiwucan/linux-lightagent-skillhub
 repository: https://github.com/xiaoguiwucan/linux-lightagent-skillhub
-min_lightagent_version: 1.0.0
+min_lightagent_version: 1.0.0-rc.1
 max_lightagent_version: null
 platforms: [linux, darwin, windows]
 category: diagnostics

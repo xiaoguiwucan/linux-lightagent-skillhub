@@ -9,9 +9,9 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with: {fetch-depth: 0}
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with: {python-version: "3.12"}
       - run: pip install -r requirements-dev.txt
       - run: python scripts/validate.py
@@ -19,14 +19,14 @@ jobs:
       - run: python -m unittest discover -s tests
       - name: Linux container non-root package smoke test
         run: docker run --rm --user 65534:65534 -v "$PWD:/hub:ro" -w /hub python:3.12-slim python scripts/docker_smoke.py
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           repository: xiaoguiwucan/linux-lightagent
           ref: main
           path: lightagent-main
       - name: Current Linux LightAgent main compatibility test
-        run: docker run --rm --user 65534:65534 -e PYTHONPATH=/lightagent-main -v "$PWD:/hub:ro" -v "$PWD/lightagent-main:/lightagent-main:ro" -w /hub python:3.12-slim python scripts/lightagent_main_smoke.py
-      - uses: actions/upload-artifact@v4
+        run: python scripts/lightagent_main_smoke.py --hub-root . --lightagent-root lightagent-main
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: skillhub-preview
           path: dist

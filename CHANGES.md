@@ -2,6 +2,16 @@
 
 ## 2026-07-30
 
+### 对齐 Linux LightAgent 1.0.0 候选版
+
+- 5 个 active 技能的最低兼容版本统一为 `1.0.0-rc.1`，使当前 Linux 独立发行候选版能够通过客户端安装门禁；稳定 `1.0.0` 及后续版本继续满足该下限。
+- 主仓兼容 smoke 现在读取目标 checkout 的 `cli/VERSION`，复用目标 frontmatter parser，并以标准语义化版本逐项校验 active 技能的最低和最高版本。
+- CI 改为在已安装 Hub 校验依赖的宿主环境执行跨仓检查，新增 RC 通过和旧 RC 拒绝测试；所有 GitHub Actions 固定到 commit SHA。
+- 非 root 包 smoke 从脚本所在仓库解析 `dist/packages`，同时支持 GitHub Docker 挂载路径和本地仓库验证，不再硬编码 `/hub`。
+- 安全漏洞私密报告入口切换到 `xiaoguiwucan/linux-lightagent-skillhub` 的 Security Advisory 页面。
+
+验证记录：Schema 校验、37 项 Hub 测试和 Linux LightAgent `1.0.0-rc.1` 跨仓兼容检查通过。
+
 ### 建立 Linux LightAgent 专属 Skill Hub
 
 - 仓库、Pages、CI 兼容目标和发布签名身份迁移到 `xiaoguiwucan/linux-lightagent-skillhub`，使用独立 Ed25519 密钥，不继承旧 Hub 信任根。

@@ -7,10 +7,13 @@ import zipfile
 from pathlib import Path
 
 
+ROOT = Path(__file__).resolve().parents[1]
+
+
 def main():
     if os.geteuid() == 0:
         raise SystemExit("Docker smoke test must run as a non-root user")
-    packages = sorted(Path("/hub/dist/packages").glob("*.zip"))
+    packages = sorted((ROOT / "dist" / "packages").glob("*.zip"))
     if not packages:
         raise SystemExit("No skill packages found")
     for package in packages:

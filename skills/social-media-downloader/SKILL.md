@@ -8,7 +8,7 @@ author: 风
 license: Apache-2.0
 homepage: https://xiaoguiwucan.github.io/linux-lightagent-skillhub/
 repository: https://github.com/xiaoguiwucan/linux-lightagent-skillhub
-min_lightagent_version: 2.1.0
+min_lightagent_version: 1.0.0-rc.1
 max_lightagent_version: null
 platforms: [linux, darwin, windows]
 category: media
