@@ -6,8 +6,8 @@ description: >
   识别当前消息中的单个抖音视频分享链接，下载公开视频并通过 send 发送到当前 Web、微信群或其他会话。当用户消息包含 v.douyin.com 短链接、iesdouyin.com 分享页或 douyin.com/video 链接时必须使用；即使用户只粘贴分享文案而没有明确说“下载”也要自动处理。仅处理单个公开视频，不处理主页、合集、直播、图集或批量下载。
 author: 风
 license: Apache-2.0
-homepage: https://xiaoguiwucan.github.io/LightAgent-SkillHub/
-repository: https://github.com/xiaoguiwucan/LightAgent-SkillHub
+homepage: https://xiaoguiwucan.github.io/linux-lightagent-skillhub/
+repository: https://github.com/xiaoguiwucan/linux-lightagent-skillhub
 min_lightagent_version: 2.1.0
 max_lightagent_version: null
 platforms: [linux, darwin, windows]
@@ -29,6 +29,12 @@ lightagent:
   file_paths: [<workspace>/videos/douyin-video-share]
   tools: [skill_run, send]
   docker_notes: 需要 media-processing 能力；单个视频最大下载 200 MiB，超过 20 MiB 时生成不超过 20 MiB 的群聊发送版本，文件写入 LightAgent workspace。
+  wechat_group:
+    access: restricted
+    authorization_scope: stable-room-or-member
+    notes: 安装后由管理员按稳定群或稳定成员显式授权。
+  output_contract:
+    mode: agent-managed
   entrypoints:
     - name: download_video
       path: scripts/download_video.py

@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "LightAgent Skill Metadata",
+  "title": "Linux LightAgent Skill Metadata",
   "type": "object",
   "required": ["name", "version", "description", "author", "license", "homepage", "repository", "min_lightagent_version", "platforms", "category", "tags", "requirements", "lightagent"],
   "properties": {
@@ -36,12 +36,47 @@
     },
     "lightagent": {
       "type": "object",
-      "required": ["network_domains", "file_paths", "tools", "docker_notes"],
+      "required": ["network_domains", "file_paths", "tools", "docker_notes", "wechat_group", "output_contract"],
       "properties": {
         "network_domains": {"type": "array", "items": {"type": "string"}},
         "file_paths": {"type": "array", "items": {"type": "string"}},
         "tools": {"type": "array", "items": {"type": "string"}},
         "docker_notes": {"type": "string"},
+        "wechat_group": {
+          "type": "object",
+          "required": ["access", "authorization_scope"],
+          "properties": {
+            "access": {"enum": ["restricted", "disabled"]},
+            "authorization_scope": {"enum": ["stable-room-or-member", "not-applicable"]},
+            "notes": {"type": "string", "maxLength": 1000}
+          },
+          "additionalProperties": false
+        },
+        "output_contract": {
+          "oneOf": [
+            {
+              "type": "object",
+              "required": ["mode"],
+              "properties": {"mode": {"const": "agent-managed"}},
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "required": ["mode", "delivery_order"],
+              "properties": {
+                "mode": {"const": "ordered-text-attachments"},
+                "delivery_order": {
+                  "type": "array",
+                  "prefixItems": [{"const": "text"}, {"const": "attachments"}],
+                  "items": false,
+                  "minItems": 2,
+                  "maxItems": 2
+                }
+              },
+              "additionalProperties": false
+            }
+          ]
+        },
         "entrypoints": {
           "type": "array",
           "items": {

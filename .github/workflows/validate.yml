@@ -18,14 +18,14 @@ jobs:
       - run: python scripts/build_registry.py --output dist
       - run: python -m unittest discover -s tests
       - name: Official Docker non-root smoke test
-        run: docker run --rm --user agent --entrypoint python -v "$PWD:/hub:ro" -w /hub yideng966/lightagent:latest scripts/docker_smoke.py
+        run: docker run --rm --user agent --entrypoint python -v "$PWD:/hub:ro" -w /hub xiaoguiwucan/linux-lightagent:latest scripts/docker_smoke.py
       - uses: actions/checkout@v4
         with:
-          repository: yideng966/LightAgent
-          ref: master
+          repository: xiaoguiwucan/linux-lightagent
+          ref: main
           path: lightagent-main
-      - name: Current LightAgent main compatibility test
-        run: docker run --rm --user agent --entrypoint python -e PYTHONPATH=/lightagent-main -v "$PWD:/hub:ro" -v "$PWD/lightagent-main:/lightagent-main:ro" -w /hub yideng966/lightagent:latest scripts/lightagent_main_smoke.py
+      - name: Current Linux LightAgent main compatibility test
+        run: docker run --rm --user agent --entrypoint python -e PYTHONPATH=/lightagent-main -v "$PWD:/hub:ro" -v "$PWD/lightagent-main:/lightagent-main:ro" -w /hub xiaoguiwucan/linux-lightagent:latest scripts/lightagent_main_smoke.py
       - uses: actions/upload-artifact@v4
         with:
           name: skillhub-preview

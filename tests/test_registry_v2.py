@@ -21,6 +21,14 @@ class RegistryV2Test(unittest.TestCase):
         entrypoint = metadata["lightagent"]["entrypoints"][0]
         self.assertEqual("scripts/fetch_meta.py", entrypoint["path"])
         self.assertTrue((ROOT / "skills" / "av-meta" / entrypoint["path"]).is_file())
+        self.assertEqual(
+            ["text", "attachments"],
+            metadata["lightagent"]["output_contract"]["delivery_order"],
+        )
+        self.assertEqual(
+            "stable-room-or-member",
+            metadata["lightagent"]["wechat_group"]["authorization_scope"],
+        )
 
     def test_deterministic_package_contains_runner_metadata(self):
         package = deterministic_zip(ROOT / "skills" / "av-meta")
@@ -31,6 +39,8 @@ class RegistryV2Test(unittest.TestCase):
         self.assertIn("release_notes", schema["properties"])
         self.assertIn("capabilities", schema["properties"]["requirements"]["properties"])
         self.assertIn("entrypoints", schema["properties"]["lightagent"]["properties"])
+        self.assertIn("wechat_group", schema["properties"]["lightagent"]["properties"])
+        self.assertIn("output_contract", schema["properties"]["lightagent"]["properties"])
 
     def test_schema_restricts_runner_environment_names(self):
         schema = json.loads((ROOT / "schemas" / "skill.schema.json").read_text(encoding="utf-8"))

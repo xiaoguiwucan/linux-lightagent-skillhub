@@ -49,7 +49,10 @@ def sign(payload: bytes):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", default="dist")
-    parser.add_argument("--base-url", default="https://xiaoguiwucan.github.io/LightAgent-SkillHub")
+    parser.add_argument(
+        "--base-url",
+        default="https://xiaoguiwucan.github.io/linux-lightagent-skillhub",
+    )
     parser.add_argument("--require-signature", action="store_true")
     args = parser.parse_args()
     output = ROOT / args.output
@@ -79,7 +82,7 @@ def main():
 
     registry = {
         "registry_version": 2,
-        "repository": "https://github.com/xiaoguiwucan/LightAgent-SkillHub",
+        "repository": "https://github.com/xiaoguiwucan/linux-lightagent-skillhub",
         "source_commit": commit,
         "skills": skills,
         "revocations": json.loads((ROOT / "revocations.json").read_text(encoding="utf-8")),
@@ -89,7 +92,11 @@ def main():
     if args.require_signature and not signature:
         raise SystemExit("发布要求设置 SKILL_HUB_SIGNING_KEY")
     document = dict(registry)
-    document["signature"] = {"algorithm": "ed25519", "key_id": "lightagent-skillhub-2026-01", "value": signature} if signature else None
+    document["signature"] = {
+        "algorithm": "ed25519",
+        "key_id": "linux-lightagent-skillhub-2026-01",
+        "value": signature,
+    } if signature else None
     (output / "registry.json").write_text(json.dumps(document, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     (output / "registry.sha256").write_text(sha256_bytes(payload) + "\n", encoding="ascii")
     print(f"已生成 {len(skills)} 个技能：{output}")

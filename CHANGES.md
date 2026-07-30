@@ -1,5 +1,16 @@
 # 变更记录
 
+## 2026-07-30
+
+### 建立 Linux LightAgent 专属 Skill Hub
+
+- 仓库、Pages、CI 兼容目标和发布签名身份迁移到 `xiaoguiwucan/linux-lightagent-skillhub`，使用独立 Ed25519 密钥，不继承旧 Hub 信任根。
+- Schema 强制声明微信群 stable scope 权限和输出合同；贡献、开发与审核规范同步覆盖 Linux/Docker、Runner、最小权限和文字后附件发送顺序。
+- `av-meta` 升级到 1.2.0，补充实际 DMM 封面域名，输出确定性 `reply_text`、`attachments` 与 `delivery_order`，并增加格式和域名回归测试。
+- CowAgent 原技能广场继续作为 Linux LightAgent 中的独立只读目录，不作为签名安装或更新后备源。
+
+验证记录：Schema 校验、5 个确定性技能包构建、33 项 Hub 基础测试和 42 项技能评测通过；使用新私钥生成签名 Registry 后，Linux LightAgent 内置公钥验签成功，全部包 SHA-256 匹配。
+
 ## 2026-07-28
 
 ### 多平台媒体下载 2.1.0

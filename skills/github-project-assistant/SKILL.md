@@ -5,8 +5,8 @@ version: 1.0.0
 description: 查询已配置 GitHub 项目的 Issue、PR、CI、Release、提交历史和更新动态；生成中文汇总，并在明确确认后创建 Issue 或合并已有 PR。当用户询问仓库动态、问题、版本、PR 审查、技能入库或定时项目汇总时使用。
 author: 风
 license: Apache-2.0
-homepage: https://xiaoguiwucan.github.io/LightAgent-SkillHub/
-repository: https://github.com/xiaoguiwucan/LightAgent-SkillHub
+homepage: https://xiaoguiwucan.github.io/linux-lightagent-skillhub/
+repository: https://github.com/xiaoguiwucan/linux-lightagent-skillhub
 min_lightagent_version: 1.1.0
 max_lightagent_version: null
 platforms: [linux, darwin, windows]
@@ -28,6 +28,12 @@ lightagent:
   file_paths: [<skill_config>, <skill_data>]
   tools: [github_project, scheduler]
   docker_notes: 可在官方 Docker 非 root 用户环境运行；PAT 由 LightAgent 中央密钥配置保管。
+  wechat_group:
+    access: restricted
+    authorization_scope: stable-room-or-member
+    notes: 安装后由管理员按稳定群或稳定成员显式授权；写操作仍需当前用户明确确认。
+  output_contract:
+    mode: agent-managed
   entrypoints: []
 ---
 

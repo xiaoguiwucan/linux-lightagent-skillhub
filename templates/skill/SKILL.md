@@ -5,8 +5,8 @@ version: 0.1.0
 description: 简明说明技能用途以及应该在什么情况下使用。
 author: your-github-name
 license: Apache-2.0
-homepage: https://github.com/xiaoguiwucan/LightAgent-SkillHub
-repository: https://github.com/xiaoguiwucan/LightAgent-SkillHub
+homepage: https://github.com/xiaoguiwucan/linux-lightagent-skillhub
+repository: https://github.com/xiaoguiwucan/linux-lightagent-skillhub
 min_lightagent_version: 1.0.0
 max_lightagent_version: null
 platforms: [linux, darwin, windows]
@@ -26,6 +26,12 @@ lightagent:
   file_paths: []
   tools: []
   docker_notes: 可在官方 Docker 非 root 用户环境运行。
+  wechat_group:
+    access: restricted
+    authorization_scope: stable-room-or-member
+    notes: 安装后由管理员按稳定群或稳定成员显式授权；不支持微信群时改为 disabled 和 not-applicable。
+  output_contract:
+    mode: agent-managed
   entrypoints: []
 ---
 

@@ -6,8 +6,8 @@ description: >
   识别当前消息中的抖音、TikTok、YouTube 或 Telegram 链接，创建可续传下载任务并按群聊实测上限发送原始画质视频或原图。支持分享文案、短链接、图集、媒体组、Shorts、频道和播放列表；用户查询进度、继续下载、继续发送、重发上一段或取消任务时也必须使用。
 author: 风
 license: Apache-2.0
-homepage: https://xiaoguiwucan.github.io/LightAgent-SkillHub/
-repository: https://github.com/xiaoguiwucan/LightAgent-SkillHub
+homepage: https://xiaoguiwucan.github.io/linux-lightagent-skillhub/
+repository: https://github.com/xiaoguiwucan/linux-lightagent-skillhub
 min_lightagent_version: 2.1.0
 max_lightagent_version: null
 platforms: [linux, darwin, windows]
@@ -34,6 +34,12 @@ lightagent:
   file_paths: [<skill_data>, <temp>]
   tools: [skill_run, send]
   docker_notes: 需要 media-processing 能力中的 FFmpeg/ffprobe。yt-dlp 与 gallery-dl 安装在技能私有 Python 环境；Telegram 的 tdl v0.20.3 由管理员辅助程序按平台下载并校验官方 SHA-256。默认并发上限为 3。
+  wechat_group:
+    access: restricted
+    authorization_scope: stable-room-or-member
+    notes: 安装后由管理员按稳定群或稳定成员显式授权。
+  output_contract:
+    mode: agent-managed
   entrypoints:
     - name: prepare_media
       path: scripts/prepare_media.py

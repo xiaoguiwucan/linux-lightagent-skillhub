@@ -46,6 +46,7 @@ ALLOWED_HOSTS = {
     "javdb601.com",
     "javtxt.com",
     "pics.dmm.co.jp",
+    "awsimgsrc.dmm.co.jp",
 }
 MAX_COVER_BYTES = 20 * 1024 * 1024
 
@@ -781,6 +782,39 @@ def load_mirrors_from_env() -> list[str]:
     return list(DEFAULT_JAVDB_MIRRORS)
 
 
+def format_reply_text(result: dict[str, Any]) -> str:
+    """Render the stable user-facing text consumed by Linux LightAgent."""
+
+    def value(raw: Any, empty: str = "暂无") -> str:
+        if isinstance(raw, list):
+            text = "、".join(str(item).strip() for item in raw if str(item).strip())
+        else:
+            text = str(raw or "").strip()
+        return text or empty
+
+    lines = [
+        f"番号：{value(result.get('code'))}",
+        f"标题：{value(result.get('title_full') or result.get('title'))}",
+        f"日期：{value(result.get('date'))} 时长：{value(result.get('runtime'))}",
+        f"演员：{value(result.get('actresses'), '未标')}",
+        f"片商：{value(result.get('maker'))}",
+        f"剧情：{value(result.get('plot'))}",
+        "磁力：",
+    ]
+    magnets = list(result.get("magnets") or [])[:3]
+    if not magnets:
+        lines.append("暂无")
+    for magnet in magnets:
+        lines.append(value(magnet.get("magnet")))
+        details = [
+            value(magnet.get("size"), ""),
+            value(magnet.get("tags"), ""),
+            value(magnet.get("name"), ""),
+        ]
+        lines.append("（{}）".format(" ".join(item for item in details if item) or "暂无"))
+    return "\n".join(lines)
+
+
 def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(description="Fetch AV metadata from JavBus/JavDB")
     p.add_argument("code", help="番号，如 SSIS-001")
@@ -886,6 +920,15 @@ def main(argv: list[str] | None = None) -> int:
             result["cover_file"] = path
         except Exception as e:  # noqa: BLE001
             result["cover_file_error"] = str(e)
+
+    if result.get("ok"):
+        result["reply_text"] = format_reply_text(result)
+        result["attachments"] = (
+            [{"type": "image", "path": result["cover_file"]}]
+            if result.get("cover_file")
+            else []
+        )
+        result["delivery_order"] = ["text", "attachments"]
 
     print(json.dumps(result, ensure_ascii=False, indent=2 if args.pretty else None))
     return 0 if result.get("ok") else 1

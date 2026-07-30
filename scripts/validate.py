@@ -71,6 +71,23 @@ def main():
         except InvalidVersion as exc:
             errors.append(f"{rel}: LightAgent 版本无效: {exc}")
         declared_domains = set(meta.get("lightagent", {}).get("network_domains", []))
+        wechat_group = meta.get("lightagent", {}).get("wechat_group", {})
+        if wechat_group.get("access") == "restricted" and (
+            wechat_group.get("authorization_scope") != "stable-room-or-member"
+        ):
+            errors.append(f"{rel}: 微信群 restricted 技能必须使用 stable-room-or-member 授权范围")
+        if wechat_group.get("access") == "disabled" and (
+            wechat_group.get("authorization_scope") != "not-applicable"
+        ):
+            errors.append(f"{rel}: 微信群 disabled 技能必须使用 not-applicable 授权范围")
+        output_contract = meta.get("lightagent", {}).get("output_contract", {})
+        if output_contract.get("mode") == "ordered-text-attachments":
+            required_terms = ("reply_text", "attachments", "delivery_order")
+            missing_terms = [term for term in required_terms if term not in text]
+            if missing_terms:
+                errors.append(
+                    f"{rel}: 有序输出技能必须说明运行时字段 {', '.join(missing_terms)}"
+                )
         capabilities = meta.get("requirements", {}).get("capabilities", [])
         if len(capabilities) != len(set(capabilities)):
             errors.append(f"{rel}: requirements.capabilities 不得重复")

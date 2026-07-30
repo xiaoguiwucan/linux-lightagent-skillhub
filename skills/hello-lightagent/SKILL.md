@@ -5,8 +5,8 @@ version: 1.0.0
 description: 用于检查 LightAgent Skill Hub 安装链路，并返回当前技能版本和运行环境摘要。
 author: LightAgent
 license: Apache-2.0
-homepage: https://github.com/xiaoguiwucan/LightAgent-SkillHub
-repository: https://github.com/xiaoguiwucan/LightAgent-SkillHub
+homepage: https://github.com/xiaoguiwucan/linux-lightagent-skillhub
+repository: https://github.com/xiaoguiwucan/linux-lightagent-skillhub
 min_lightagent_version: 1.0.0
 max_lightagent_version: null
 platforms: [linux, darwin, windows]
@@ -26,6 +26,12 @@ lightagent:
   file_paths: []
   tools: []
   docker_notes: 可在官方 Docker 非 root 用户环境运行。
+  wechat_group:
+    access: restricted
+    authorization_scope: stable-room-or-member
+    notes: 安装后由管理员按稳定群或稳定成员显式授权。
+  output_contract:
+    mode: agent-managed
   entrypoints: []
 ---
 

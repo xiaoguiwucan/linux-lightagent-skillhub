@@ -1,13 +1,13 @@
 ---
 name: av-meta
 schema_version: 2
-version: 1.1.0
+version: 1.2.0
 description: >
   从 JavBus（主）/JavDB 查询单个番号的标题、演员、封面、磁力和剧情。当用户本轮消息出现明确番号（如 SSIS-001/IPX-177），或明确要求查询该番号的磁力、封面或剧情时必须使用。必须读取本技能并执行 scripts/fetch_meta.py，下载封面后用 send 发送；禁止改用 browser、web_fetch 或手工访问数据站点。不批量枚举番号，不扫描历史消息，无明确番号时不猜测查询。
 author: 风
 license: Apache-2.0
-homepage: https://xiaoguiwucan.github.io/LightAgent-SkillHub/
-repository: https://github.com/xiaoguiwucan/LightAgent-SkillHub
+homepage: https://xiaoguiwucan.github.io/linux-lightagent-skillhub/
+repository: https://github.com/xiaoguiwucan/linux-lightagent-skillhub
 min_lightagent_version: 2.1.0
 max_lightagent_version: null
 platforms: [linux, darwin]
@@ -15,7 +15,7 @@ category: media
 tags: [metadata, cover, javbus, javdb, magnet]
 status: active
 publisher: community
-release_notes: 使用结构化 Skill Runner 入口执行查询脚本，避免通过通用 Bash 直接启动技能代码。
+release_notes: 增加 Linux LightAgent 有序文本与封面合同，先发送确定性结构化文本，确认成功后再发送封面；补充 DMM 实际封面域名。
 breaking_changes: []
 requirements:
   env: [AV_META_JAVBUS, AV_META_JAVDB_MIRRORS, AV_META_PLOT_BASE]
@@ -25,10 +25,17 @@ requirements:
   downloads: []
   capabilities: []
 lightagent:
-  network_domains: [www.javbus.com, javdb.com, www.javdb.com, javdb36.com, javdb39.com, javdb48.com, javdb601.com, javtxt.com, pics.dmm.co.jp]
+  network_domains: [www.javbus.com, javdb.com, www.javdb.com, javdb36.com, javdb39.com, javdb48.com, javdb601.com, javtxt.com, pics.dmm.co.jp, awsimgsrc.dmm.co.jp]
   file_paths: [<workspace>/images/av-meta]
   tools: [skill_run, send]
   docker_notes: 可在官方 Docker 非 root 用户环境运行；封面只能写入 LightAgent workspace 下的 images/av-meta 目录。
+  wechat_group:
+    access: restricted
+    authorization_scope: stable-room-or-member
+    notes: 安装后由管理员按稳定群或稳定成员显式授权；回复由通道真实 mention 当前提问者。
+  output_contract:
+    mode: ordered-text-attachments
+    delivery_order: [text, attachments]
   entrypoints:
     - name: fetch_meta
       path: scripts/fetch_meta.py
@@ -79,10 +86,11 @@ lightagent:
 
 ## 返回
 
-脚本成功后：
+脚本成功后读取运行时字段 `reply_text`、`attachments` 和 `delivery_order`：
 
-1. 如果 JSON 中存在 `cover_file`，调用 `send(path=cover_file)` 发送封面一次。
-2. 使用以下精简格式返回文本并结束本轮：
+1. 将 `reply_text` 原样作为最终文本，不改写、不总结、不添加模型说明。
+2. 如果 `attachments[0].path` 存在，调用一次 `send(path=attachments[0].path)`。
+3. Linux LightAgent 微信群通道会按 `delivery_order = [text, attachments]` 先发送并确认文本，再发送封面。
 
 ```text
 番号：{code}
@@ -100,7 +108,7 @@ lightagent:
 
 最多再附加 `magnets[1]` 和 `magnets[2]`。字段为空时写“暂无”，不要编造。
 
-脚本输出字段包括：`ok`、`code`、`title_full`、`date`、`runtime`、`actresses`、`maker`、`cover`、`cover_file`、`plot`、`best_magnet`、`magnets`、`sources`。
+脚本输出字段包括：`ok`、`code`、`title_full`、`date`、`runtime`、`actresses`、`maker`、`cover`、`cover_file`、`plot`、`best_magnet`、`magnets`、`sources`、`reply_text`、`attachments`、`delivery_order`。
 
 ## 失败处理
 

@@ -18,9 +18,10 @@ SPEC.loader.exec_module(MODULE)
 class AvMetaFetchTest(unittest.TestCase):
     def test_skill_metadata_requires_script_path_for_explicit_code(self):
         text = SKILL.read_text(encoding="utf-8")
-        self.assertIn("version: 1.0.2", text)
+        self.assertIn("version: 1.2.0", text)
         self.assertIn("必须读取本技能并执行 scripts/fetch_meta.py", text)
         self.assertIn("禁止改用 browser、web_fetch", text)
+        self.assertIn("mode: ordered-text-attachments", text)
 
     def test_normalize_code_accepts_explicit_code_only(self):
         self.assertEqual("SSIS-001", MODULE.normalize_code("ssis_001"))
@@ -40,6 +41,13 @@ class AvMetaFetchTest(unittest.TestCase):
         ):
             with self.subTest(url=url), self.assertRaises(ValueError):
                 MODULE.validate_external_url(url)
+
+        self.assertEqual(
+            "https://awsimgsrc.dmm.co.jp/pics_dig/digital/video/example.jpg",
+            MODULE.validate_external_url(
+                "https://awsimgsrc.dmm.co.jp/pics_dig/digital/video/example.jpg"
+            ),
+        )
 
     def test_cover_path_must_stay_inside_output_root(self):
         with tempfile.TemporaryDirectory() as temp:
@@ -74,6 +82,31 @@ class AvMetaFetchTest(unittest.TestCase):
         magnets = MODULE.parse_magnets_html(html)
         self.assertEqual(1, len(magnets))
         self.assertEqual(["HD", "SUB"], magnets[0]["tags"])
+
+    def test_reply_text_is_deterministic_and_limits_magnets(self):
+        result = {
+            "code": "HSODA-078",
+            "title_full": "测试标题",
+            "date": "2025-08-07",
+            "runtime": "222分鐘",
+            "actresses": [],
+            "maker": "Hsoda",
+            "plot": "测试剧情",
+            "magnets": [
+                {
+                    "magnet": f"magnet:?xt=urn:btih:{index:040x}",
+                    "size": f"{index + 1}.00GB",
+                    "tags": ["HD", "SUB"],
+                    "name": f"HSODA-078-{index}",
+                }
+                for index in range(4)
+            ],
+        }
+        reply = MODULE.format_reply_text(result)
+        self.assertIn("番号：HSODA-078", reply)
+        self.assertIn("演员：未标", reply)
+        self.assertEqual(3, reply.count("magnet:?xt=urn:btih:"))
+        self.assertNotIn("HSODA-078-3", reply)
 
     def test_cli_rejects_invalid_code_without_network(self):
         output = io.StringIO()
