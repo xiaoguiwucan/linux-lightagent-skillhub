@@ -20,13 +20,28 @@ class IanXiaoheiIllustrationsContractTest(unittest.TestCase):
         metadata, body = load_skill()
         self.assertEqual("ian-xiaohei-illustrations", metadata["name"])
         self.assertEqual(2, metadata["schema_version"])
-        self.assertEqual("1.0.0", metadata["version"])
+        self.assertEqual("1.1.0", metadata["version"])
         self.assertEqual("MIT", metadata["license"])
         self.assertEqual(["read", "image_generate"], metadata["lightagent"]["tools"])
         self.assertEqual("restricted", metadata["lightagent"]["wechat_group"]["access"])
         self.assertEqual(
             "stable-room-or-member",
             metadata["lightagent"]["wechat_group"]["authorization_scope"],
+        )
+        self.assertEqual(
+            {
+                "triggers": ["小黑", "Ian风格", "Ian 风格"],
+                "files": [
+                    "SKILL.md",
+                    "references/style-dna.md",
+                    "references/xiaohei-ip.md",
+                    "references/composition-patterns.md",
+                    "references/prompt-template.md",
+                    "references/qa-checklist.md",
+                ],
+                "max_chars": 30000,
+            },
+            metadata["lightagent"]["prompt_preload"],
         )
         self.assertIn("一次请求只调用一次 `image_generate`", body)
         self.assertNotIn("内置 `image_gen`", body)

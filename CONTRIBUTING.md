@@ -26,4 +26,6 @@ Schema v2 的脚本技能必须在 `lightagent.entrypoints` 声明结构化入�
 
 需要确定性文字与媒体顺序时使用 `lightagent.output_contract.mode: ordered-text-attachments`。脚本成功输出必须包含 `reply_text`、`attachments` 和 `delivery_order: [text, attachments]`；附件必须位于 workspace 允许目录内。普通自由回答或复杂多轮媒体任务使用 `agent-managed`。
 
+只有确实会因重复读取技能说明产生明显延迟的技能，才可声明 `lightagent.prompt_preload`。`triggers` 必须使用少量、明确且不易误命中的短语，`files` 只能列出技能目录内的必要说明文件，`max_chars` 不得超过 50000。预加载不会绕过微信群 stable room/member ACL；未命中、未授权、文件缺失、路径越界或内容超限时客户端必须回退普通读取流程。
+
 提交 PR 即声明你有权按所填许可证发布全部代码和素材，并同意项目按安全、版权或质量原因撤销版本。

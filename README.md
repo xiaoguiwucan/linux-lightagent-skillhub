@@ -42,6 +42,8 @@ Schema v2 脚本技能必须声明结构化 `lightagent.entrypoints`，并通过
 
 每个技能必须声明 `lightagent.wechat_group`。可在微信群调用的技能统一使用 `restricted` 和 `stable-room-or-member`，安装后由管理员显式授权稳定群或稳定成员；不支持微信群的技能必须声明 `disabled`。需要确定性文本加媒体回复时，使用 `ordered-text-attachments` 合同，并返回 `reply_text`、`attachments`、`delivery_order`，由 Linux LightAgent 按文字确认成功后再发送附件。
 
+对需要重复读取多份固定说明、且延迟收益明确的技能，可审核后声明 `lightagent.prompt_preload`。客户端只从当前不可变技能快照预载声明文件，并继续执行微信群稳定身份授权、目录边界和字符上限校验；失败时自动回退普通技能读取。
+
 网络域名、文件路径、环境变量和工具权限必须按实际最小范围声明。通配域名只允许用于无法稳定枚举的媒体 CDN，并须在 PR 中解释。Skill Runner 第一阶段提供受控子进程、最小环境、路径、超时、输出和资源限制，但不构成完整文件系统或网络沙箱。
 
 ## 许可证

@@ -88,6 +88,18 @@ def main():
                 errors.append(
                     f"{rel}: 有序输出技能必须说明运行时字段 {', '.join(missing_terms)}"
                 )
+        prompt_preload = meta.get("lightagent", {}).get("prompt_preload", {})
+        for preload_file in prompt_preload.get("files", []):
+            preload_path = path.parent / str(preload_file)
+            try:
+                preload_path.resolve().relative_to(path.parent.resolve())
+            except ValueError:
+                errors.append(f"{rel}: prompt_preload 文件路径越界: {preload_file}")
+                continue
+            if not preload_path.is_file() or preload_path.is_symlink():
+                errors.append(
+                    f"{rel}: prompt_preload 文件不存在或为符号链接: {preload_file}"
+                )
         capabilities = meta.get("requirements", {}).get("capabilities", [])
         if len(capabilities) != len(set(capabilities)):
             errors.append(f"{rel}: requirements.capabilities 不得重复")
