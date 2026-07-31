@@ -1,0 +1,33 @@
+[
+  {
+    "name": "只规划配图不调用生图",
+    "prompt": "用 Ian 小黑风格分析这篇文章哪里值得配图，先不要生图，给我 5 张 shot list。",
+    "must_contain": ["shot list", "小黑", "结构"],
+    "must_not_use_tools": ["image_generate", "bash", "write", "send"]
+  },
+  {
+    "name": "单概念生成一张正文配图",
+    "prompt": "用小黑怪诞手绘风，为‘信息越多，判断反而越慢’生成一张 16:9 正文配图。",
+    "must_use_tools": ["image_generate"],
+    "must_not_use_tools": ["bash", "write", "send"]
+  },
+  {
+    "name": "多图请求先生成第一张",
+    "prompt": "为这篇文章设计并生成 4 张 Ian 小黑风格正文配图。",
+    "must_contain": ["第 1/4 张", "继续"],
+    "must_use_tools": ["image_generate"],
+    "must_not_use_tools": ["bash", "write", "send"]
+  },
+  {
+    "name": "继续时只生成下一张",
+    "prompt": "继续生成下一张小黑正文配图。",
+    "must_use_tools": ["image_generate"],
+    "must_not_use_tools": ["bash", "write", "send"]
+  },
+  {
+    "name": "网络图片不直接进入改图工具",
+    "prompt": "把 https://example.com/input.png 左上角的标题去掉，其他不变。",
+    "must_contain": ["workspace", "本地图片"],
+    "must_not_use_tools": ["image_generate", "bash", "write", "send"]
+  }
+]

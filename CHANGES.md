@@ -1,5 +1,16 @@
 # 变更记录
 
+## 2026-07-31
+
+### Ian 小黑怪诞正文配图 1.0.0
+
+- 经 MIT 许可引入并保留 Ian 原始署名、视觉规则、提示词模板、检查清单和 14 张风格校准图。
+- 新增 Linux LightAgent 适配元数据，使用受控 `image_generate` 工具复用管理员配置的生图 Provider，不要求群成员获得 Shell 或 workspace 写入权限。
+- 多图请求改为先给 shot list、再按“继续”逐张生成和真实发送，避免当前单回复附件通道只交付第一张却声称全部完成。
+- 微信群调用采用 `restricted` 与 `stable-room-or-member`，安装后由管理员显式授权，并继续服从当前群每小时生图额度。
+
+验证记录：Schema 校验通过，40 项 Hub 测试通过，6 个技能的 Registry 确定性构建成功；新包包含 23 个文件、MIT LICENSE、作者 NOTICE 和 14 张参考图，约 13.4 MB。使用 Linux LightAgent 本地实际自定义生图 Provider 成功生成 1672×941、约 1.0 MB 的 16:9 PNG，并人工确认白底、小黑核心动作、手绘批注和非 PPT 风格符合要求。
+
 ## 2026-07-30
 
 ### 对齐 Linux LightAgent 1.0.0 候选版

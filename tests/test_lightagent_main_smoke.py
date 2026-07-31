@@ -31,8 +31,8 @@ class LightAgentCompatibilitySmokeTest(unittest.TestCase):
         version, total, active = validate_compatibility(ROOT, lightagent_root)
 
         self.assertEqual("1.0.0rc1", str(version))
-        self.assertEqual(5, total)
-        self.assertEqual(5, active)
+        self.assertEqual(6, total)
+        self.assertEqual(6, active)
 
     def test_older_release_candidate_is_rejected(self):
         fixture, lightagent_root = self._lightagent_fixture("1.0.0-rc.0")
