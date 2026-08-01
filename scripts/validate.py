@@ -100,6 +100,19 @@ def main():
                 errors.append(
                     f"{rel}: prompt_preload 文件不存在或为符号链接: {preload_file}"
                 )
+        visualizer = meta.get("lightagent", {}).get("visualizer", {})
+        template_file = str(visualizer.get("prompt_template_file") or "")
+        if visualizer and template_file:
+            template_path = path.parent / template_file
+            try:
+                template_path.resolve().relative_to(path.parent.resolve())
+            except ValueError:
+                errors.append(f"{rel}: visualizer 模板路径越界: {template_file}")
+            else:
+                if not template_path.is_file() or template_path.is_symlink():
+                    errors.append(f"{rel}: visualizer 模板不存在或为符号链接: {template_file}")
+                elif "{{ARTIFACT_JSON}}" not in template_path.read_text(encoding="utf-8"):
+                    errors.append(f"{rel}: visualizer 模板必须包含 {{{{ARTIFACT_JSON}}}} 占位符")
         capabilities = meta.get("requirements", {}).get("capabilities", [])
         if len(capabilities) != len(set(capabilities)):
             errors.append(f"{rel}: requirements.capabilities 不得重复")

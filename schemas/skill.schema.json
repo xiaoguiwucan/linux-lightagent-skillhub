@@ -102,6 +102,32 @@
           },
           "additionalProperties": false
         },
+        "visualizer": {
+          "type": "object",
+          "required": ["accepts", "output_types", "prompt_profile", "prompt_template_file", "max_input_chars"],
+          "properties": {
+            "accepts": {
+              "type": "array",
+              "contains": {"const": "lightagent.artifact.v1"},
+              "items": {"type": "string"},
+              "uniqueItems": true
+            },
+            "styles": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+            "output_types": {
+              "type": "array",
+              "contains": {"const": "image"},
+              "items": {"type": "string"},
+              "uniqueItems": true
+            },
+            "prompt_profile": {"enum": ["generic", "xiaohei"]},
+            "prompt_template_file": {
+              "type": "string",
+              "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[A-Za-z0-9_./-]+$"
+            },
+            "max_input_chars": {"type": "integer", "minimum": 2000, "maximum": 60000}
+          },
+          "additionalProperties": false
+        },
         "entrypoints": {
           "type": "array",
           "items": {

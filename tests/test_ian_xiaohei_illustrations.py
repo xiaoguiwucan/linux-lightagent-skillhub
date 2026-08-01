@@ -20,7 +20,7 @@ class IanXiaoheiIllustrationsContractTest(unittest.TestCase):
         metadata, body = load_skill()
         self.assertEqual("ian-xiaohei-illustrations", metadata["name"])
         self.assertEqual(2, metadata["schema_version"])
-        self.assertEqual("1.1.0", metadata["version"])
+        self.assertEqual("1.2.0", metadata["version"])
         self.assertEqual("MIT", metadata["license"])
         self.assertEqual(["read", "image_generate"], metadata["lightagent"]["tools"])
         self.assertEqual("restricted", metadata["lightagent"]["wechat_group"]["access"])
@@ -43,6 +43,20 @@ class IanXiaoheiIllustrationsContractTest(unittest.TestCase):
             },
             metadata["lightagent"]["prompt_preload"],
         )
+        self.assertEqual(
+            {
+                "accepts": ["lightagent.artifact.v1"],
+                "styles": ["xiaohei"],
+                "output_types": ["image"],
+                "prompt_profile": "generic",
+                "prompt_template_file": "references/visualizer-prompt.md",
+                "max_input_chars": 30000,
+            },
+            metadata["lightagent"]["visualizer"],
+        )
+        template = (SKILL_ROOT / "references" / "visualizer-prompt.md").read_text(encoding="utf-8")
+        self.assertIn("{{ARTIFACT_JSON}}", template)
+        self.assertIn("{{INSTRUCTION}}", template)
         self.assertIn("一次请求只调用一次 `image_generate`", body)
         self.assertNotIn("内置 `image_gen`", body)
 

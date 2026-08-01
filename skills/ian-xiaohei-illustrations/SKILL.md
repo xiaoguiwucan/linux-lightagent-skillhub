@@ -1,7 +1,7 @@
 ---
 name: ian-xiaohei-illustrations
 schema_version: 2
-version: 1.1.0
+version: 1.2.0
 description: 生成 Ian 风格的中文正文配图。用于用户要求为中文文章、帖子、博客、工作流文档、方法论、流程、结构、状态、隐喻或观点生成“怪诞”“小黑”“手绘”“正文配图”“文章插图”“配图建议”“shot list”“去标题/改图”等任务；通过 Linux LightAgent 受控生图工具输出纯白手绘、少量红橙蓝批注的 16:9 图片。
 author: Ian
 license: MIT
@@ -14,7 +14,7 @@ category: image
 tags: [illustration, chinese-article, hand-drawn, xiaohei, image-generation]
 status: active
 publisher: community
-release_notes: 新增受技能快照与微信群 ACL 约束的提示词预加载声明，命中小黑风格请求时一次加载核心规则，减少生图前的多轮模型读取。
+release_notes: 正式声明 lightagent.artifact.v1 通用可视化能力，可将群报告及其他技能的结构化结果直接生成一张小黑风格图片，同时保留原有提示词预加载与 ACL 边界。
 breaking_changes: []
 requirements:
   env: []
@@ -38,6 +38,13 @@ lightagent:
     triggers: [小黑, Ian风格, "Ian 风格"]
     files: [SKILL.md, references/style-dna.md, references/xiaohei-ip.md, references/composition-patterns.md, references/prompt-template.md, references/qa-checklist.md]
     max_chars: 30000
+  visualizer:
+    accepts: [lightagent.artifact.v1]
+    styles: [xiaohei]
+    output_types: [image]
+    prompt_profile: generic
+    prompt_template_file: references/visualizer-prompt.md
+    max_input_chars: 30000
   entrypoints: []
 ---
 

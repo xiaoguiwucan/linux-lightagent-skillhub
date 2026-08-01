@@ -2,6 +2,14 @@
 
 ## 2026-07-31
 
+### Ian 小黑怪诞正文配图 1.2.0
+
+- 技能自身新增 `lightagent.visualizer` 声明，正式接收 `lightagent.artifact.v1` 并输出单张图片；群报告及未来技能结果无需再依赖主项目的同名兼容清单。
+- 新增受包签名保护的通用 Artifact 生图模板，保持小黑白底手绘规则，并明确只使用结构化输入中的事实；微信群调用继续执行 stable room/member ACL。
+- Skill Hub Schema 与校验器新增可视化协议、模板路径和 `{{ARTIFACT_JSON}}` 占位符检查。
+
+验证记录：`scripts/validate.py` 校验 6 个技能通过，Hub 40 项回归通过，Registry 确定性重建完成，现有 Python 3.10 容器以非 root 用户解包 6 个技能通过。
+
 ### Ian 小黑怪诞正文配图 1.1.0
 
 - 新增 `lightagent.prompt_preload` 声明，微信群消息明确命中“小黑”或 Ian 风格时，从当前不可变技能快照一次预载 `SKILL.md`、风格 DNA、小黑 IP、原创构图规则、提示词模板和 QA 检查清单，减少生图前逐轮读取造成的等待，同时完整保留技能要求。
